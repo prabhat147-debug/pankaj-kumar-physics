@@ -1,43 +1,54 @@
 @echo off
-title Uploading Pankaj Kumar Physics Mentorship to GitHub
-echo ========================================================
-echo   Uploading Website to:
-echo   https://github.com/prabhat147-debug/pankaj-kumar-physics
-echo ========================================================
+SET "GIT_PATH=C:\Users\HP\.gemini\antigravity\bin\mingit\cmd"
+SET "GIT_BIN=C:\Users\HP\.gemini\antigravity\bin\mingit\mingw64\bin"
+SET PATH=%GIT_PATH%;%GIT_BIN%;%PATH%
+
+echo ============================================
+echo   PrepPHY Website - GitHub Deployment Tool
+echo ============================================
+echo.
+echo Working on: pankaj-kumar-physics
+echo Remote: https://github.com/prabhat147-debug/pankaj-kumar-physics.git
 echo.
 
-set PATH=C:\Users\HP\.gemini\antigravity\bin\mingit\cmd;C:\Users\HP\.gemini\antigravity\bin\mingit\mingw64\bin;%PATH%
+cd /d "%~dp0"
 
-echo [1/3] Adding files to git...
+echo [1/4] Staging all files...
 git add .
-git commit -m "Complete physics mentorship website for Er. Pankaj Kumar" 2>nul
-
-echo [2/3] Verifying GitHub repository link...
-git remote remove origin 2>nul
-git remote add origin https://github.com/prabhat147-debug/pankaj-kumar-physics.git
-git branch -M main
-
-echo [3/3] Uploading files to GitHub...
-echo.
-echo NOTE: If a GitHub window pops up asking you to "Sign in with your browser",
-echo       please click it and authorize. It takes just 2 seconds!
-echo.
-git push -u origin main
-
-if %ERRORLEVEL% equ 0 (
-    echo.
-    echo ========================================================
-    echo  SUCCESS! Website uploaded successfully to GitHub!
-    echo ========================================================
-    echo.
-    echo Next step to view live website on GitHub Pages:
-    echo 1. Go to https://github.com/prabhat147-debug/pankaj-kumar-physics/settings/pages
-    echo 2. Under Branch, select 'main' and click 'Save'.
-    echo.
-) else (
-    echo.
-    echo An issue occurred during upload. Check if you authorized the browser window.
-    echo.
+if %ERRORLEVEL% NEQ 0 (
+    echo ERROR: git add failed. Exiting.
+    pause
+    exit /b 1
 )
 
+echo [2/4] Committing changes...
+git commit -m "Deploy: PrepPHY website update - %DATE% %TIME%"
+if %ERRORLEVEL% NEQ 0 (
+    echo NOTE: Nothing new to commit, or commit failed.
+)
+
+echo [3/4] Pushing to GitHub...
+echo NOTE: A browser window may open for GitHub sign-in. 
+echo       Please sign in with the account: prabhat147-debug
+echo.
+git push origin main
+if %ERRORLEVEL% NEQ 0 (
+    echo.
+    echo ERROR: Push failed. Possible reasons:
+    echo   - GitHub authentication needed (sign in when browser opens)
+    echo   - No internet connection
+    echo   - Repository doesn't exist on GitHub
+    pause
+    exit /b 1
+)
+
+echo.
+echo ============================================
+echo [4/4] SUCCESS! Website pushed to GitHub!
+echo.
+echo Live at: https://prabhat147-debug.github.io/pankaj-kumar-physics/
+echo.
+echo (GitHub Pages may take 1-2 minutes to update)
+echo ============================================
+echo.
 pause
